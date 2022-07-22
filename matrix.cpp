@@ -16,7 +16,7 @@ int main() {
         }
     }
 
-    std::chrono::time_point start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -26,7 +26,7 @@ int main() {
         }
     }
 
-    std::chrono::time_point end = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
     
     double time_spent = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / 1000000000.0;
     std::cout << time_spent << std::endl;
