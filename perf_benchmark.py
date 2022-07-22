@@ -31,7 +31,7 @@ def compile(target, iter_num: int) -> float:
 	print(f"{Fore.RED}Iteration {Style.BRIGHT}{iter_num}{Style.NORMAL}/{ITERATIONS}{Fore.RESET} --- {Fore.GREEN}Compiling subject {target[0]}.")
 	start = time()
 
-	process = Popen(target[1], stdout=PIPE, stderr=PIPE)
+	process = Popen(target[1])
 	process.wait()
 
 	if process.returncode != 0:
