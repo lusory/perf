@@ -34,4 +34,5 @@ jobs:
           override: true
       - name: Run benchmarks
         run: |
+          pip3 install -r requirements.txt
           python3 perf_benchmark.py
