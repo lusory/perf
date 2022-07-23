@@ -41,10 +41,12 @@ class Benchmark:
     def benchmark(self):
         for target in self.targets:
             for iteration in range(self.iterations):
+                self.iter_num = iteration + 1
+
                 compilation_time = 0
                 if target[1] is not None:
-                    compilation_time = compile(target, iteration + 1)
-                running_time = run(target, iteration + 1)
+                    compilation_time = compile(target)
+                running_time = run(target)
 
                 self.compilation_times.setdefault(target[0], []).append(compilation_time)
                 self.running_times.setdefault(target[0], []).append(running_time)
