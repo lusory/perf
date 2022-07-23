@@ -45,8 +45,8 @@ class Benchmark:
 
                 compilation_time = 0
                 if target[1] is not None:
-                    compilation_time = compile(target)
-                running_time = run(target)
+                    compilation_time = self.compile(target)
+                running_time = self.run(target)
 
                 self.compilation_times.setdefault(target[0], []).append(compilation_time)
                 self.running_times.setdefault(target[0], []).append(running_time)
