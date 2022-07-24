@@ -33,15 +33,15 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - name: Run benchmarks (part 1)
+      - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
+      - name: Run benchmarks (part 1)
+        run: |
           python3 perf_benchmark.py --end 4
       - name: Run benchmarks (part 2)
         run: |
-          pip3 install -r requirements.txt
           python3 perf_benchmark.py --start 4 --end 8
       - name: Run benchmarks (part 3)
         run: |
-          pip3 install -r requirements.txt
           python3 perf_benchmark.py --start 8
