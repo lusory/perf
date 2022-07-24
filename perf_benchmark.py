@@ -68,11 +68,11 @@ class Benchmark:
                     for file in target[3]:
                         remove(file)
 
-                if c_dumping_file is not None:
+                if self.c_dumping_file is not None:
                     with open(self.c_dumping_file, "w") as f:
                         dump(self.compilation_times, f)
 
-                if r_dumping_file is not None:
+                if self.r_dumping_file is not None:
                     with open(self.r_dumping_file, "w") as f:
                         dump(self.running_times, f)
 
