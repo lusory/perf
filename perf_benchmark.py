@@ -3,20 +3,23 @@ from pandas import DataFrame
 from colorama import init, Fore, Style
 from time import time
 from os import remove
+from json import load, dump
+from argparse import ArgumentParser
+from os.path import isfile
 
 # tuples of (benchmarked subject, compile command, run command, files to clean up)
 TARGETS = [
-    ("Java", ["javac", "MatrixMultiplication.java"], ["java", "MatrixMultiplication"], ["MatrixMultiplication.class"]),
-    ("C", ["gcc", "matrix.c", "-o", "matrix"], ["./matrix"], ["matrix"]),
-    ("C[-O2]", ["gcc", "-O2", "matrix.c", "-o", "matrix_O2"], ["./matrix_O2"], ["matrix_O2"]),
-    ("C[-O3]", ["gcc", "-O3", "matrix.c", "-o", "matrix_O3"], ["./matrix_O3"], ["matrix_O3"]),
-    ("C++", ["g++", "matrix.cpp", "-o", "matrix_cpp"], ["./matrix_cpp"], ["matrix_cpp"]),
-    ("C++[-O2]", ["g++", "-O2", "matrix.cpp", "-o", "matrix_cpp_O2"], ["./matrix_cpp_O2"], ["matrix_cpp_O2"]),
-    ("C++[-O3]", ["g++", "-O3", "matrix.cpp", "-o", "matrix_cpp_O3"], ["./matrix_cpp_O3"], ["matrix_cpp_O3"]),
-    ("Go", None, ["go", "run", "matrix.go"], None),
-    ("Rust", ["rustc", "matrix.rs", "-o", "matrix_rust"], ["./matrix_rust"], ["matrix_rust"]),
+    ("Java", ["javac", "MatrixMultiplication.java"], ["java", "MatrixMultiplication"], ["MatrixMultiplication.class"]), # 0
+    ("C", ["gcc", "matrix.c", "-o", "matrix"], ["./matrix"], ["matrix"]), # 1
+    ("C[-O2]", ["gcc", "-O2", "matrix.c", "-o", "matrix_O2"], ["./matrix_O2"], ["matrix_O2"]), # 2
+    ("C[-O3]", ["gcc", "-O3", "matrix.c", "-o", "matrix_O3"], ["./matrix_O3"], ["matrix_O3"]), # 3
+    ("C++", ["g++", "matrix.cpp", "-o", "matrix_cpp"], ["./matrix_cpp"], ["matrix_cpp"]), # 4
+    ("C++[-O2]", ["g++", "-O2", "matrix.cpp", "-o", "matrix_cpp_O2"], ["./matrix_cpp_O2"], ["matrix_cpp_O2"]), # 5
+    ("C++[-O3]", ["g++", "-O3", "matrix.cpp", "-o", "matrix_cpp_O3"], ["./matrix_cpp_O3"], ["matrix_cpp_O3"]), # 6
+    ("Go", None, ["go", "run", "matrix.go"], None), # 7
+    ("Rust", ["rustc", "matrix.rs", "-o", "matrix_rust"], ["./matrix_rust"], ["matrix_rust"]), # 8
     # python is the slowest, so keep it at the end
-    ("Python", None, ["python3", "matrix.py"], None)
+    ("Python", None, ["python3", "matrix.py"], None) # 9
 ]
 
 # number of iterations
@@ -31,12 +34,22 @@ class NonZeroExitCodeException(Exception):
 
 
 class Benchmark:
-    def __init__(self, targets, iterations: int):
+    def __init__(self, targets, iterations: int, c_dumping_file: str, r_dumping_file: str):
         self.targets = targets
         self.iterations = iterations
+        self.c_dumping_file = c_dumping_file
+        self.r_dumping_file = r_dumping_file
         self.iter_num = 0
-        self.compilation_times = {}
-        self.running_times = {}
+        if c_dumping_file is not None and isfile(c_dumping_file):
+            with open(c_dumping_file, "r") as f:
+                self.compilation_times = load(f)
+        else:
+            self.compilation_times = {}
+        if r_dumping_file is not None and isfile(r_dumping_file):
+            with open(r_dumping_file, "r") as f:
+                self.running_times = load(f)
+        else:
+            self.running_times = {}
 
     def benchmark(self):
         for target in self.targets:
@@ -54,6 +67,14 @@ class Benchmark:
                 if target[3] is not None:
                     for file in target[3]:
                         remove(file)
+
+                if c_dumping_file is not None:
+                    with open(self.c_dumping_file, "w") as f:
+                        dump(self.compilation_times, f)
+
+                if r_dumping_file is not None:
+                    with open(self.r_dumping_file, "w") as f:
+                        dump(self.running_times, f)
 
     def compile(self, target) -> float:
         print(f"{Fore.RED}Iteration {Style.BRIGHT}{self.iter_num}{Style.NORMAL}/{self.iterations}{Fore.RESET} --- {Fore.GREEN}Compiling subject {target[0]}.")
@@ -92,6 +113,12 @@ class Benchmark:
         print("\n---   Running average times   ---\n\n", r_df.mean())
 
 if __name__ == "__main__":
-    benchmark = Benchmark(TARGETS, ITERATIONS)
+    parser = ArgumentParser(description="Benchmarks programming languages.")
+    parser.add_argument("--start", type=int, help="the index at which the target list starts", required=False, default=0)
+    parser.add_argument("--end", type=int, help="the index at which the target list ends", required=False, default=len(TARGETS))
+
+    args = parser.parse_args()
+
+    benchmark = Benchmark(TARGETS[args.start:args.end], ITERATIONS, "compilation_times.json", "running_times.json")
     benchmark.benchmark()
     benchmark.print_frames()
