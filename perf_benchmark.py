@@ -17,9 +17,11 @@ TARGETS = [
     ("C++[-O2]", ["g++", "-O2", "matrix.cpp", "-o", "matrix_cpp_O2"], ["./matrix_cpp_O2"], ["matrix_cpp_O2"]), # 5
     ("C++[-O3]", ["g++", "-O3", "matrix.cpp", "-o", "matrix_cpp_O3"], ["./matrix_cpp_O3"], ["matrix_cpp_O3"]), # 6
     ("Go", None, ["go", "run", "matrix.go"], None), # 7
-    ("Rust", ["rustc", "matrix.rs", "-o", "matrix_rust"], ["./matrix_rust"], ["matrix_rust"]), # 8
+    ("Rust", ["rustc", "-o", "matrix_rust", "matrix.rs"], ["./matrix_rust"], ["matrix_rust"]), # 8   
+    ("Rust[-O2]", ["rustc", "-C", "opt-level=2", "-o", "matrix_rust_O2", "matrix.rs"], ["./matrix_rust_O2"], ["matrix_rust_O2"]), # 9
+    ("Rust[-O3]", ["rustc", "-C", "opt-level=3", "-o", "matrix_rust_O3", "matrix.rs"], ["./matrix_rust_O3"], ["matrix_rust_O3"]), # 10
     # python is the slowest, so keep it at the end
-    ("Python", None, ["python3", "matrix.py"], None) # 9
+    ("Python", None, ["python3", "matrix.py"], None) # 11
 ]
 
 # number of iterations
