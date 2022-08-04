@@ -9,4 +9,4 @@ Matrix multiplication performance benchmarks of various popular programming lang
 * C++ (latest G++, includes -O2 and -O3 optimizations)
 * Python (latest)
 * Go (1.18.4)
-* Rust (latest stable)
+* Rust (latest stable, includes opt-level 2 and 3 optimizations)
