@@ -6,6 +6,7 @@ from os import remove
 from json import load, dump
 from argparse import ArgumentParser
 from os.path import isfile
+from platform import system
 
 # tuples of (benchmarked subject, compile command, run command, files to clean up)
 TARGETS = [
@@ -21,7 +22,7 @@ TARGETS = [
     ("Rust[-O2]", ["rustc", "-C", "opt-level=2", "-o", "matrix_rust_O2", "matrix.rs"], ["./matrix_rust_O2"], ["matrix_rust_O2"]), # 9
     ("Rust[-O3]", ["rustc", "-C", "opt-level=3", "-o", "matrix_rust_O3", "matrix.rs"], ["./matrix_rust_O3"], ["matrix_rust_O3"]), # 10
     # python is the slowest, so keep it at the end
-    ("Python", None, ["python3", "matrix.py"], None) # 11
+    ("Python", None, ["python" if system() == "Windows" else "python3", "matrix.py"], None) # 11
 ]
 
 # number of iterations

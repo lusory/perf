@@ -4,9 +4,9 @@ Matrix multiplication performance benchmarks of various popular programming lang
 
 # Languages
 
-* Java (Adoptium Temurin 18)
+* Java (Adoptium Temurin 19)
 * C (latest GCC, includes -O2 and -O3 optimizations)
 * C++ (latest G++, includes -O2 and -O3 optimizations)
 * Python (latest)
-* Go (1.18.4)
+* Go (1.19.3)
 * Rust (latest stable, includes opt-level 2 and 3 optimizations)
